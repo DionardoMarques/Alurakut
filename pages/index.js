@@ -3,7 +3,7 @@ import MainGrid from '../src/components/MainGrid'
 //Importando o componente "Box"
 import Box from '../src/components/Box'
 //Para voltar uma pasta utilizar o comando ../ e para prosseguir ./
-import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
+import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
 
 
@@ -15,6 +15,16 @@ function ProfileSidebar(propriedades) {
     <Box>
       {/* As chaves {} são a parte do React, já as aspas `` são JavaScript */ }
       <img src={`https://github.com/${propriedades.githubUser}.png`} style={{ borderRadius: '8px' }} />
+      <hr />
+
+      <p>
+        <a className="" href={`https://github.com/${propriedades.githubUser}`}>
+          @{propriedades.githubUser}
+        </a>
+      </p>
+      <hr />
+
+      <AlurakutProfileSidebarMenuDefault />
     </Box>
   )
 }
@@ -61,8 +71,8 @@ const pessoasFavoritas = [
             {/*O ".map entrará em cada item do array do componente "pessoasFavoritas" e vai modificar ele de alguma forma retornando um valor diferente*/}
             {pessoasFavoritas.map((itemAtual) => {
               return (
-               <li>
-                <a href={`/users/${itemAtual}`} key={itemAtual}>
+               <li key={itemAtual}>
+                <a href={`/users/${itemAtual}`}>
                   <img src={`https://github.com/${itemAtual}.png`} />
                   <span>{itemAtual}</span>
                 </a>

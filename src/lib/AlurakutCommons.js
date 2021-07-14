@@ -181,6 +181,9 @@ function AlurakutMenuProfileSidebar({ githubUser }) {
   )
 }
 
+AlurakutMenuProfileSidebar = styled.div`
+ a { margin-right: 50px; }
+`;
 // ================================================================================================================
 // AlurakutProfileSidebarMenuDefault
 // ================================================================================================================
