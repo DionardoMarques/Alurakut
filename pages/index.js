@@ -35,17 +35,18 @@ export default function Home() {
 const githubUser = 'dionardomarques';
 //Criando o componente de pessoas favoritas da comunidade com um array
 const pessoasFavoritas = [
-  'juunegreiros',
   'omariosouto',
+  'juunegreiros',
   'peas',
   'kristoferhub',
-  'rafael99costa'
+  'rafael99costa',
+  'filipedeschamps'
 ]
   
   return (
   //Os fragments <> são espaços que englobam as tags HTML sem nenhum valor semântico. Ele não coloca no HTML final
   <>
-  <AlurakutMenu />
+  <AlurakutMenu/>
     <MainGrid>
       {/* <Box style="grid-area: profileArea;"> */ }
       <div className="profileArea" style={{ gridArea: 'profileArea' }}>
