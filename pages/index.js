@@ -6,7 +6,7 @@ import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/Box'
 //Para voltar uma pasta utilizar o comando ../ e para prosseguir ./
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
-import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
+import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
 
 
 //Criando uma função apenas para a foto de perfil da barra lateral
@@ -60,7 +60,7 @@ const pessoasFavoritas = [
   return (
   //Os fragments <> são espaços que englobam as tags HTML sem nenhum valor semântico. Ele não coloca no HTML final
   <>
-  <AlurakutMenu githubUser={githubUser}/>
+    <AlurakutMenu githubUser={githubUser} />
     <MainGrid>
       {/* <Box style="grid-area: profileArea;"> */ }
       <div className="profileArea" style={{ gridArea: 'profileArea' }}>
@@ -73,7 +73,7 @@ const pessoasFavoritas = [
             Bem vindo(a)
           </h1>
 
-        <OrkutNostalgicIconSet />
+          <OrkutNostalgicIconSet />
         </Box>
 
         <Box>
@@ -95,14 +95,16 @@ const pessoasFavoritas = [
               setComunidades(comunidadesAtualizadas)
           }}>
             <div>
-              <input placeholder="Qual vai ser o nome da sua comunidade?" 
+              <input 
+              placeholder="Qual vai ser o nome da sua comunidade?" 
               name="title"
               aria-label="Qual vai ser o nome da sua comunidade?"
               type="text"
               />
             </div>
             <div>
-              <input placeholder="Coloque uma URL para usarmos de capa" 
+              <input 
+              placeholder="Coloque uma URL para usarmos de capa" 
               name="image"
               aria-label="Coloque uma URL para usarmos de capa"
               />
@@ -111,7 +113,7 @@ const pessoasFavoritas = [
             <button>
               Criar comunidade
             </button>
-           </form>
+          </form>
         </Box>
       </div>
       <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
@@ -143,12 +145,12 @@ const pessoasFavoritas = [
             {/*O ".map entrará em cada item do array do componente "pessoasFavoritas" e vai modificar ele de alguma forma retornando um valor diferente*/}
             {pessoasFavoritas.slice(0,6).map((itemAtual) => {
               return (
-               <li key={itemAtual}>
+              <li key={itemAtual}>
                 <a href={`/users/${itemAtual}`}>
                   <img src={`https://github.com/${itemAtual}.png`} />
                   <span>{itemAtual}</span>
                 </a>
-               </li>
+              </li>
               )
             })}
           </ul>

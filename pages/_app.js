@@ -14,9 +14,12 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-family: sans-serif;
     background-color: #D9E6F6;
+    //Capa de fundo com imagem responsiva
     background-image: url("/capa_fundo_alurakut.png");
     //o valor cover especifica que a imagem de fundo deve ser dimensionada de acordo com o recipiente, assegurando que ambas as dimensões (altura e largura) são são maiores ou iguais ao container
     background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
   }
 
   #__next {
