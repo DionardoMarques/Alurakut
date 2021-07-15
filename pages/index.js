@@ -31,6 +31,30 @@ function ProfileSidebar(propriedades) {
   )
 }
 
+function ProfileRelationsBox(propriedades) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {/*O seguidores.length faz a contagem do número de pessoas e mostra na tela*/}
+        {propriedades.title} ({propriedades.items.length})
+      </h2>
+      <ul>
+        {/*O ".map entrará em cada item do array do componente "pessoasFavoritas" e vai modificar ele de alguma forma retornando um valor diferente*/}
+        {/* {seguidores.slice(0,6).map((itemAtual) => {
+          return (
+          <li key={itemAtual}>
+            <a href={`https://github.com/${itemAtual.png}`}>
+              <img src={itemAtual.image} />
+              <span>{itemAtual.title}</span>
+            </a>
+          </li>
+          )
+        })} */}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  )
+}
+
 //Criando a página inicial
 export default function Home() {
 //Criando o componente para o usuário do github, dono do perfil. Mas pode ser reutilizado para outros perfis dentro da rede social.
@@ -38,13 +62,11 @@ const githubUser = 'dionardomarques';
 //Hook que inteceptará o momento em que o react ta atuando na página
 const [comunidades, setComunidades] = React.useState([{
   id: '1231321241241414124214214412412',
-  title: 'Eu odeio acrodar cedo',
+  title: 'Eu odeio acordar cedo',
   image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
 }]);
 // const comunidades = comunidades[0];
 // const alteradorDeComunidades/setComunidades = comunidades[1];
-
-console.log('Nosso teste', );
 //Criando o componente de comunidades com um array
 // const comunidades = ['Alurakut'];
 //Criando o componente de pessoas favoritas da comunidade com um array
@@ -56,6 +78,23 @@ const pessoasFavoritas = [
   'rafael99costa',
   'filipedeschamps',
 ]
+
+
+const [seguidores, setSeguidores] = React.useState([]);
+//Pegar o array de dados do GitHub
+React.useEffect(function() {
+  fetch('https://api.github.com/users/DionardoMarques/followers')
+  .then(function(respostaDoServidor) {
+    return respostaDoServidor.json();
+  })
+  .then(function(respostaCompleta) {
+    setSeguidores(respostaCompleta);
+  })
+}, [])
+
+  console.log('seguidores antes do return', seguidores);
+//Criar um box que vai ter um map, baseado nos items do array que pegamos do GitHub
+
   
   return (
   //Os fragments <> são espaços que englobam as tags HTML sem nenhum valor semântico. Ele não coloca no HTML final
@@ -117,9 +156,10 @@ const pessoasFavoritas = [
         </Box>
       </div>
       <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
+        <ProfileRelationsBox title="Seguidores" items={seguidores} />
         <ProfileRelationsBoxWrapper>
           <h2 className="smallTitle">
-            {/*O pessoasFavoritas.length faz a contagem do número de pessoas e mostra na tela*/}
+            {/*O comunidades.length faz a contagem do número de pessoas e mostra na tela*/}
             Comunidades ({comunidades.length})
           </h2>
           <ul>
