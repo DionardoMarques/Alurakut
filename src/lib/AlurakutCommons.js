@@ -58,7 +58,7 @@ AlurakutMenu.Wrapper = styled.header`
   .alurakutMenuProfileSidebar {
     background: white;
     position: fixed;
-    z-index: 100;
+    z-index: 1000; //100
     padding: 46px;
     bottom: 0;
     left: 0;
@@ -100,7 +100,7 @@ AlurakutMenu.Wrapper = styled.header`
     display: flex;
     justify-content: space-between;
     position: relative;
-    z-index: 101;
+    z-index: 1000; //101
     @media(min-width: 860px) {
       justify-content: flex-start;
     }
@@ -181,9 +181,6 @@ function AlurakutMenuProfileSidebar({ githubUser }) {
   )
 }
 
-AlurakutMenuProfileSidebar = styled.div`
- a { margin-right: 50px; }
-`;
 // ================================================================================================================
 // AlurakutProfileSidebarMenuDefault
 // ================================================================================================================
