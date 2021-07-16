@@ -60,11 +60,7 @@ export default function Home() {
 //Criando o componente para o usuário do github, dono do perfil. Mas pode ser reutilizado para outros perfis dentro da rede social.
 const githubUser = 'dionardomarques';
 //Hook que inteceptará o momento em que o react ta atuando na página
-const [comunidades, setComunidades] = React.useState([{
-  id: '1231321241241414124214214412412',
-  title: 'Eu odeio acordar cedo',
-  image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-}]);
+const [comunidades, setComunidades] = React.useState([]);
 // const comunidades = comunidades[0];
 // const alteradorDeComunidades/setComunidades = comunidades[1];
 //Criando o componente de comunidades com um array
@@ -79,10 +75,10 @@ const pessoasFavoritas = [
   'filipedeschamps',
 ]
 
-
 const [seguidores, setSeguidores] = React.useState([]);
 //Pegar o array de dados do GitHub
 React.useEffect(function() {
+  //GET
   fetch('https://api.github.com/users/DionardoMarques/followers')
   .then(function(respostaDoServidor) {
     return respostaDoServidor.json();
@@ -90,6 +86,36 @@ React.useEffect(function() {
   .then(function(respostaCompleta) {
     setSeguidores(respostaCompleta);
   })
+
+
+  //API GraphQL
+  fetch('https://graphql.datocms.com/', {
+    method: 'POST',
+    headers: {
+      'Authorization': '41d7fa2e89078f94239a8ef106b81c',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({ "query": `query {
+      allCommunities {
+        id
+        title
+        imageUrl
+        creatorSlug
+      }
+    }` })
+  })
+  //Pega o retorno do response.json() e já retorna
+  .then((response) => response.json())
+  .then((respostaCompleta) => {
+    const comunidadesVindasDoDato = respostaCompleta.data.allCommunities;
+    console.log(comunidadesVindasDoDato)
+    setComunidades(comunidadesVindasDoDato)
+  })
+  // .then(function (response) {
+  //   return response.json()
+  // })
+
 }, [])
 
   console.log('seguidores antes do return', seguidores);
@@ -99,6 +125,7 @@ React.useEffect(function() {
   return (
   //Os fragments <> são espaços que englobam as tags HTML sem nenhum valor semântico. Ele não coloca no HTML final
   <>
+    {/*Mostrando a foto de usuário do GitHub no menu sanduíche*/}
     <AlurakutMenu githubUser={githubUser} />
     <MainGrid>
       {/* <Box style="grid-area: profileArea;"> */ }
@@ -126,12 +153,25 @@ React.useEffect(function() {
               console.log('Campo: ', dadosDoForm.get('image'));
 
               const comunidade = {
-                id: new Date().toISOString(),
                 title: dadosDoForm.get('title'),
-                image: dadosDoForm.get('image'),
+                imageUrl: dadosDoForm.get('image'),
+                creatorSlug: githubUser,
               }
-              const comunidadesAtualizadas = [...comunidades, comunidade];
-              setComunidades(comunidadesAtualizadas)
+
+              fetch('/api/comunidades', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(comunidade)
+              })
+              .then(async (response) => {
+                const dados = await response.json();
+                console.log(dados.registroCriado);
+                const comunidade = dados.registroCriado;
+                const comunidadesAtualizadas = [...comunidades, comunidade];
+                setComunidades(comunidadesAtualizadas)
+              })
           }}>
             <div>
               <input 
@@ -149,7 +189,7 @@ React.useEffect(function() {
               />
             </div>
 
-            <button>
+            <button style={{ background: '#e402a2' }}>
               Criar comunidade
             </button>
           </form>
@@ -164,11 +204,12 @@ React.useEffect(function() {
           </h2>
           <ul>
             {/*O ".map entrará em cada item do array do componente "pessoasFavoritas" e vai modificar ele de alguma forma retornando um valor diferente*/}
-            {comunidades.slice(0,6).map((itemAtual) => {
+            {/*Colocar antes do .map ".slice(0,6)" se quiser limitar para no máximo 6 itens dentro da box, senão estourará e as imagens sairão da box. Porém tem o overflow que cria a barra*/}
+            {comunidades.map((itemAtual) => {
               return (
               <li key={itemAtual.id}>
-                <a href={`/users/${itemAtual.title}`}>
-                  <img src={itemAtual.image} />
+                <a href={`/communities/${itemAtual.id}`}>
+                  <img src={itemAtual.imageUrl} />
                   <span>{itemAtual.title}</span>
                 </a>
               </li>
@@ -183,7 +224,8 @@ React.useEffect(function() {
           </h2>
           <ul>
             {/*O ".map entrará em cada item do array do componente "pessoasFavoritas" e vai modificar ele de alguma forma retornando um valor diferente*/}
-            {pessoasFavoritas.slice(0,6).map((itemAtual) => {
+            {/*Colocar antes do .map ".slice(0,6)" se quiser limitar para no máximo 6 itens dentro da box, senão estourará e as imagens sairão da box. Porém tem o overflow que cria a barra*/}
+            {pessoasFavoritas.map((itemAtual) => {
               return (
               <li key={itemAtual}>
                 <a href={`/users/${itemAtual}`}>
