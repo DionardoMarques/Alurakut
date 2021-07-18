@@ -17,7 +17,7 @@ function Link({ href, children, ...props }) {
 }
 
 // ================================================================================================================
-// Menu
+// Menu: Cores Padrões - #10003f / #e402a2
 // ================================================================================================================
 export function AlurakutMenu({ githubUser }) {
   const [isMenuOpen, setMenuState] = React.useState(false);
