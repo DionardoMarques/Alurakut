@@ -12,7 +12,7 @@ import Box from '../src/components/Box'
 //Importando o modelo de profile boxs
 import { ProfileBoxs } from '../src/components/ProfileBoxs';
 //Importando a os perfis da barra lateral
-import { ProfileSidebar } from '../src/components/ProfileSidebar'
+import { ProfileSidebar } from '../src/components/ProfileSideBar'
 //Importando a lib Alurakutcommons
 import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
 //Importando fragment do react
