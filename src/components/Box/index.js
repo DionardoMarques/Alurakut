@@ -11,6 +11,7 @@ const Box = styled.div`
   border-radius: 8px;
   margin-bottom: 10px;
   padding: 14px;
+  border-bottom: 3px solid #e402a2;
   .boxLink {
       font-size: 14px;
       color: #2E7BB4;
@@ -70,4 +71,4 @@ const Box = styled.div`
 `;
 
 //Exportando o componente "Box" para importar em outros arquivos e poder utilizá-lo
-export default Box;
+export default Box

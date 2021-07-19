@@ -5,14 +5,21 @@ import React from 'react';
 import { useRouter } from 'next/router';
 //Importando os nookies para o Next.js
 import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
+import Head from 'next/head';
 
-export default function LoginScreen() {
+export default function LoginScreen(props) {
+const [mensagem, setMensagem] = React.useState(false)
 const router = useRouter();
-const [githubUser, setGithubUser] = React.useState('dionardomarques');
+const [githubUser, setGithubUser] = React.useState([]);
 
   return (
-    <main style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <div className="loginScreen">
+    <main style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+      <Head>
+        <title>Alurakut</title>
+        <link rel='icon' href='https://image.flaticon.com/icons/png/512/1251/1251835.png'></link>
+      </Head>
+      <div className="loginScreen"> 
         <section className="logoArea">
           <img src="https://alurakut.vercel.app/logo.svg" />
 
@@ -26,6 +33,7 @@ const [githubUser, setGithubUser] = React.useState('dionardomarques');
                 infosDoEvento.preventDefault();
                 // alert('Alguém clicou no botão!')
                 console.log('Usuário: ', githubUser)
+              if (infosDoEvento.target[0].value.length > 0) {
                 fetch('https://alurakut.vercel.app/api/login', {
                   method: 'POST',
                   headers: {
@@ -33,32 +41,43 @@ const [githubUser, setGithubUser] = React.useState('dionardomarques');
                   },
                   body: JSON.stringify({ githubUser: githubUser })
               })
-              .then(async (respostaDoServer) => {
-                  const dadosDaResposta = await respostaDoServer.json()
-                  const token = (dadosDaResposta.token);
+              .then(async (response) => {
+                  const dadosResponse = await response.json()
+                  const token = dadosResponse.token
                   nookies.set(null, 'USER_TOKEN', token, {
                     path: '/',
                     maxAge: 86400 * 7
                   })
                   router.push('/')
               })
+              }
+              setTimeout(() => {
+                  setMensagem(true)
+              }, 2500);
           }}>
             <p>
               Acesse agora mesmo com seu usuário do <strong style={{ color: "#10003f" }}>GitHub</strong>!
           </p>
-            {/* value={githubUser}  */}
+          <h4 className='notFound'>
+                            {
+                                mensagem
+                                    ? '*Usuário não encontrado! Favor verificar o valor que foi inserido.'
+                                    : ''
+                            }
+                        </h4>
             <input 
                 placeholder="Usuário" 
-                value={githubUser} 
                 onChange={(evento) => {
                     setGithubUser(evento.target.value)
                 }} 
             />
             {/* Verificando uma condição pelo método do ternário*/}
-            {githubUser.length === 0
-                ? 'Preencha o campo'
-                : ''
-            }
+            <p className='mensagemPreencher'>
+              {githubUser.length === 0
+                  ? <strong>*Este campo não pode estar vazio!</strong>
+                  : ''
+              }
+            </p> 
             <button type="submit" style={{ background: '#e402a2' }}>
               Login
             </button>

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import NextLink from 'next/link';
+import { destroyCookie } from 'nookies';
+import router, { useRouter } from 'next/router'
 
 const BASE_URL = 'http://alurakut.vercel.app/';
 const v = '1';
@@ -16,8 +18,13 @@ function Link({ href, children, ...props }) {
   )
 }
 
+function logout() {
+  destroyCookie(null, 'USER_TOKEN')
+  router.push('/login')
+}
+
 // ================================================================================================================
-// Menu: Cores Padrões - #10003f / #e402a2
+// Menu: Cores Padrões - #10003f / e402a2e402a2e402a2
 // ================================================================================================================
 export function AlurakutMenu({ githubUser }) {
   const [isMenuOpen, setMenuState] = React.useState(false);
@@ -35,7 +42,7 @@ export function AlurakutMenu({ githubUser }) {
         </nav>
 
         <nav>
-          <a href={`/logout`}>
+          <a onClick={logout.bind(this)}>
             Sair
           </a>
           <div>
@@ -55,6 +62,7 @@ export function AlurakutMenu({ githubUser }) {
 AlurakutMenu.Wrapper = styled.header`
   width: 100%;
   background-color: #10003f;
+  border-bottom: 3px solid #e402a2;
   .alurakutMenuProfileSidebar {
     background: white;
     position: fixed;
@@ -211,7 +219,7 @@ export function AlurakutProfileSidebarMenuDefault() {
           <img src={`${BASE_URL}/icons/plus.svg`} />
             GitHub Trends
           </a>
-        <a href="/logout">
+        <a onClick={logout.bind(this)}>
           <img src={`${BASE_URL}//icons/logout.svg`} />
             Sair
           </a>
@@ -358,6 +366,7 @@ const AlurakutLoginScreen = css`
       border-radius: var(--commonRadius);
       padding: var(--gutter);
       text-align: center;
+      border-bottom: 3px solid #e402a2;
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
@@ -397,6 +406,7 @@ const AlurakutLoginScreen = css`
         padding-left: 50px;
         padding-right: 50px;
         background-color: var(--backgroundSecondary);
+        border-bottom: 3px solid #e402a2;
         border-radius: var(--commonRadius);
         flex: 1;
         &:not(:last-child) {
@@ -415,6 +425,16 @@ const AlurakutLoginScreen = css`
           text-decoration: none;
           color: var(--colorPrimary);
         }
+        .notFound{
+          font-size: 15px;
+          margin-top: 10px;
+          margin-bottom: -10px;
+          color: #F33535;
+        }
+        .mensagemPreencher {
+          color: red;
+          padding-bottom: 10px;
+        }
         input {
           width: 100%;
           display: block;
@@ -423,7 +443,7 @@ const AlurakutLoginScreen = css`
           background-color: var(--backgroundTertiary);
           border-radius: var(--commonRadius);
           margin-top: 24px;
-          margin-bottom: 16px;
+          margin-bottom: 10px;
         }
         button {
           width: 100%;

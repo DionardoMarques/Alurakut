@@ -1,3 +1,4 @@
+//Para voltar uma pasta utilizar o comando ../ e para prosseguir ./
 //Importando toda biblioteca do React
 import React from 'react';
 //Importando a bibilioteca de cookies do Next.Js
@@ -8,89 +9,52 @@ import jwt from 'jsonwebtoken';
 import MainGrid from '../src/components/MainGrid'
 //Importando o componente "Box"
 import Box from '../src/components/Box'
-//Para voltar uma pasta utilizar o comando ../ e para prosseguir ./
+//Importando o modelo de profile boxs
+import { ProfileBoxs } from '../src/components/ProfileBoxs';
+//Importando a os perfis da barra lateral
+import { ProfileSidebar } from '../src/components/ProfileSidebar'
+//Importando a lib Alurakutcommons
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
-import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
-
-
-//Criando uma função apenas para a foto de perfil da barra lateral
-//As propriedades que estão sendo passadas como parâmetro no componente "ProfileSidebar" foram puxadas do componente "githubUser". 
-function ProfileSidebar(propriedades) {
-  //console.log(propriedades) utilizado para visualizar na tela o comando;
-  return (
-    <Box as="aside">
-      {/* As chaves {} são a parte do React, já as aspas `` são JavaScript */ }
-      <img src={`https://github.com/${propriedades.githubUser}.png`} style={{ borderRadius: '8px' }} />
-      <hr />
-
-      <p>
-        <a className="boxLink" href={`https://github.com/${propriedades.githubUser}`}>
-          @{propriedades.githubUser}
-        </a>
-      </p>
-      <hr />
-
-      <AlurakutProfileSidebarMenuDefault />
-    </Box>
-  )
-}
-
-function ProfileRelationsBox(propriedades) {
-  return (
-    <ProfileRelationsBoxWrapper>
-      <h2 className="smallTitle">
-        {/*O seguidores.length faz a contagem do número de pessoas e mostra na tela*/}
-        {propriedades.title} ({propriedades.items.length})
-      </h2>
-      <ul>
-        {/*O ".map entrará em cada item do array do componente "pessoasFavoritas" e vai modificar ele de alguma forma retornando um valor diferente*/}
-        {/* {seguidores.slice(0,6).map((itemAtual) => {
-          return (
-          <li key={itemAtual}>
-            <a href={`https://github.com/${itemAtual.png}`}>
-              <img src={itemAtual.image} />
-              <span>{itemAtual.title}</span>
-            </a>
-          </li>
-          )
-        })} */}
-      </ul>
-    </ProfileRelationsBoxWrapper>
-  )
-}
+//Importando fragment do react
+import { Fragment } from 'react';
+//Importando head do next.js
+import Head from 'next/head';
 
 //Criando a página inicial
 export default function Home(props) {
-//Criando o componente para o usuário do github, dono do perfil. Mas pode ser reutilizado para outros perfis dentro da rede social.
-const githubUser = props.githubUser;
-//Hook que inteceptará o momento em que o react ta atuando na página
-const [comunidades, setComunidades] = React.useState([]);
-// const comunidades = comunidades[0];
-// const alteradorDeComunidades/setComunidades = comunidades[1];
-//Criando o componente de comunidades com um array
-// const comunidades = ['Alurakut'];
-//Criando o componente de pessoas favoritas da comunidade com um array
-const pessoasFavoritas = [
-  'omariosouto',
-  'juunegreiros',
-  'peas',
-  'kristoferhub',
-  'rafael99costa',
-  'filipedeschamps',
-]
 
-const [seguidores, setSeguidores] = React.useState([]);
+const [githubUser, setGithubUser] = React.useState([props.githubUser])
+
+const [comunidades, setComunidades] = React.useState([])
+
+const [seguindo, setSeguindo] = React.useState([])
+
+const [seguidores, setSeguidores] = React.useState([])
+
+const [inputTitle, setInputTitle] = React.useState()
+const handleInputTitle = (e) => {
+  setInputTitle(e.target.value)
+  console.log(inputTitle)
+}
+
+const [inputImageURL, setImageURL] = React.useState()
+const handleInputImageURL = (e) => {
+  setImageURL(e.target.value)
+}
 //Pegar o array de dados do GitHub
-React.useEffect(function() {
-  //GET
-  fetch('https://api.github.com/users/DionardoMarques/followers')
-  .then(function(respostaDoServidor) {
-    return respostaDoServidor.json();
-  })
-  .then(function(respostaCompleta) {
-    setSeguidores(respostaCompleta);
+React.useEffect(function () {
+// GET
+fetch(`https://api.github.com/users/${githubUser}/followers`)
+  .then((respostaDoServidor) => respostaDoServidor.json())
+  .then((respostaCompleta) => {
+    setSeguidores(respostaCompleta)
   })
 
+fetch(`https://api.github.com/users/${githubUser}/following`)
+  .then((respostaDoServidor) => respostaDoServidor.json())
+  .then((respostaCompleta) => {
+    setSeguindo(respostaCompleta)
+  })
 
   //API GraphQL
   fetch('https://graphql.datocms.com/', {
@@ -113,7 +77,7 @@ React.useEffect(function() {
   .then((response) => response.json())
   .then((respostaCompleta) => {
     const comunidadesVindasDoDato = respostaCompleta.data.allCommunities;
-    console.log(comunidadesVindasDoDato)
+    // console.log(comunidadesVindasDoDato)
     setComunidades(comunidadesVindasDoDato)
   })
   // .then(function (response) {
@@ -121,129 +85,96 @@ React.useEffect(function() {
   // })
 
 }, [])
-
-  console.log('seguidores antes do return', seguidores);
 //Criar um box que vai ter um map, baseado nos items do array que pegamos do GitHub
 
   
   return (
   //Os fragments <> são espaços que englobam as tags HTML sem nenhum valor semântico. Ele não coloca no HTML final
-  <>
+  <Fragment>
+    <Head>
+    <title>Alurakut</title>
+    <link rel='icon' href='https://image.flaticon.com/icons/png/512/1251/1251835.png'></link>
+    </Head>
     {/*Mostrando a foto de usuário do GitHub no menu sanduíche*/}
     <AlurakutMenu githubUser={githubUser} />
-    <MainGrid>
-      {/* <Box style="grid-area: profileArea;"> */ }
-      <div className="profileArea" style={{ gridArea: 'profileArea' }}>
-        {/* Esse componente "ProfileSidebar recebe a propriedade "githubUser que recebe o valor "{githubUser}"*/}
-        <ProfileSidebar githubUser={githubUser} />
-      </div>
-      <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
-        <Box>
-          <h1 className="title">
-            Bem vindo(a)
-          </h1>
+      <MainGrid>
+        {/* <Box style="grid-area: profileArea;"> */ }
+        <div className="profileArea" style={{ gridArea: 'profileArea' }}>
+          {/* Esse componente "ProfileSidebar recebe a propriedade "githubUser que recebe o valor "{githubUser}"*/}
+          <ProfileSidebar githubUser={githubUser} as='aside' />
+        </div>
+        <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
+          <Box>
+            <h1 className="title">
+              Bem vindo(a), {props.githubUser}
+            </h1>
 
-          <OrkutNostalgicIconSet />
-        </Box>
+            <OrkutNostalgicIconSet />
+          </Box>
 
-        <Box>
-          <h2 className="subTitle">O que você deseja fazer?</h2>
-          {/*O "onSubmit captura a ação de criar a comunidade*/}
-          <form onSubmit={function handleCriaComunidade(e) {
-              e.preventDefault();
-              const dadosDoForm = new FormData(e.target);
+          <Box>
+            <h2 className="subTitle">Inserir uma nova comunidade</h2>
+            {/*O "onSubmit captura a ação de criar a comunidade*/}
+            <form onSubmit={function handleCriaComunidade(e) {
+                e.preventDefault();
+                const dadosDoForm = new FormData(e.target);
 
-              console.log('Campo: ', dadosDoForm.get('title'));
-              console.log('Campo: ', dadosDoForm.get('image'));
+                const comunidade = {
+                  title: dadosDoForm.get('title'),
+                  imageUrl: dadosDoForm.get('image'),
+                  creatorSlug: props.githubUser
+                }
 
-              const comunidade = {
-                title: dadosDoForm.get('title'),
-                imageUrl: dadosDoForm.get('image'),
-                creatorSlug: githubUser,
-              }
+                fetch('/api/comunidades', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(comunidade)
+                })
+                .then(async (response) => {
+                  const dados = await response.json();
+                  console.log(dados.registroCriado);
+                  const comunidade = dados.registroCriado;
+                  const comunidadesAtualizadas = [comunidade, ...comunidades]
+                  setComunidades(comunidadesAtualizadas)
+                })
+              setInputTitle('')
+              setImageURL('')
+            }}>
+              <div>
+                <input
+                onChange={handleInputTitle}
+                placeholder="Qual vai ser o nome da sua comunidade?" 
+                name="title"
+                aria-label="Qual vai ser o nome da sua comunidade?"
+                type="text"
+                value={inputTitle}
+                />
+              </div>
+              <div>
+                <input
+                onChange={handleInputImageURL}
+                placeholder="Coloque uma URL para usarmos de capa" 
+                name="image"
+                aria-label="Coloque uma URL para usarmos de capa"
+                value={inputImageURL}
+                />
+              </div>
 
-              fetch('/api/comunidades', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(comunidade)
-              })
-              .then(async (response) => {
-                const dados = await response.json();
-                console.log(dados.registroCriado);
-                const comunidade = dados.registroCriado;
-                const comunidadesAtualizadas = [...comunidades, comunidade];
-                setComunidades(comunidadesAtualizadas)
-              })
-          }}>
-            <div>
-              <input 
-              placeholder="Qual vai ser o nome da sua comunidade?" 
-              name="title"
-              aria-label="Qual vai ser o nome da sua comunidade?"
-              type="text"
-              />
-            </div>
-            <div>
-              <input 
-              placeholder="Coloque uma URL para usarmos de capa" 
-              name="image"
-              aria-label="Coloque uma URL para usarmos de capa"
-              />
-            </div>
-
-            <button style={{ background: '#e402a2' }}>
-              Criar comunidade
-            </button>
-          </form>
-        </Box>
-      </div>
-      <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-        <ProfileRelationsBox title="Seguidores" items={seguidores} />
-        <ProfileRelationsBoxWrapper>
-          <h2 className="smallTitle">
-            {/*O comunidades.length faz a contagem do número de pessoas e mostra na tela*/}
-            Comunidades ({comunidades.length})
-          </h2>
-          <ul>
-            {/*O ".map entrará em cada item do array do componente "pessoasFavoritas" e vai modificar ele de alguma forma retornando um valor diferente*/}
-            {/*Colocar antes do .map ".slice(0,6)" se quiser limitar para no máximo 6 itens dentro da box, senão estourará e as imagens sairão da box. Porém tem o overflow que cria a barra*/}
-            {comunidades.map((itemAtual) => {
-              return (
-              <li key={itemAtual.id}>
-                <a href={`/communities/${itemAtual.id}`}>
-                  <img src={itemAtual.imageUrl} />
-                  <span>{itemAtual.title}</span>
-                </a>
-              </li>
-              )
-            })}
-          </ul>
-        </ProfileRelationsBoxWrapper>
-        <ProfileRelationsBoxWrapper>
-          <h2 className="smallTitle">
-            {/*O pessoasFavoritas.length faz a contagem do número de pessoas e mostra na tela*/}
-            Pessoas da comunidade ({pessoasFavoritas.length})
-          </h2>
-          <ul>
-            {/*O ".map entrará em cada item do array do componente "pessoasFavoritas" e vai modificar ele de alguma forma retornando um valor diferente*/}
-            {/*Colocar antes do .map ".slice(0,6)" se quiser limitar para no máximo 6 itens dentro da box, senão estourará e as imagens sairão da box. Porém tem o overflow que cria a barra*/}
-            {pessoasFavoritas.map((itemAtual) => {
-              return (
-              <li key={itemAtual}>
-                <a href={`/users/${itemAtual}`}>
-                  <img src={`https://github.com/${itemAtual}.png`} />
-                  <span>{itemAtual}</span>
-                </a>
-              </li>
-              )
-            })}
-          </ul>
-        </ProfileRelationsBoxWrapper>
-      </div>
-    </MainGrid>
-  </>
+              <button style={{ background: '#e402a2' }}>
+                Criar comunidade
+              </button>
+            </form>
+          </Box>
+        </div>
+        <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
+          <ProfileBoxs title={'Seguidores'} array={seguidores} setGithubUser={setGithubUser} />
+          <ProfileBoxs title={'Seguindo'} array={seguindo} setGithubUser={setGithubUser} />
+          <ProfileBoxs title={'Comunidades'} array={comunidades} />
+        </div>
+      </MainGrid>
+    </Fragment>
   )
 }
 

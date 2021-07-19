@@ -27,4 +27,4 @@ const MainGrid = styled.main`
 `;
 
 //Exportando o componente "MainGrid" para importar em outros arquivos e poder utilizá-lo
-export default MainGrid;
+export default MainGrid
