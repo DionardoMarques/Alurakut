@@ -5,7 +5,6 @@ import React from 'react';
 import { useRouter } from 'next/router';
 //Importando os nookies para o Next.js
 import nookies from 'nookies';
-import jwt from 'jsonwebtoken';
 import Head from 'next/head';
 
 export default function LoginScreen(props) {
