@@ -14,7 +14,7 @@ import { ProfileBoxs } from '../src/components/ProfileBoxs';
 //Importando a os perfis da barra lateral
 import { ProfileSidebar } from '../src/components/ProfileSidebar'
 //Importando a lib Alurakutcommons
-import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
+import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
 //Importando fragment do react
 import { Fragment } from 'react';
 //Importando head do next.js
